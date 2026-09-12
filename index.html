@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 人才库 · 交互原型交付包</title>
+<style>
+  :root {
+    --primary: #00B4B8;
+    --primary-dark: #008A8E;
+    --primary-light: rgba(0, 180, 184, 0.10);
+    --ink: #1F2D3D;
+    --muted: #7A8A99;
+    --rule: #E4EAF0;
+    --bg: #F5F7FA;
+    --card: #FFFFFF;
+    --font: -apple-system, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font); background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.65; }
+
+  .top-bar {
+    background: linear-gradient(135deg, #00343A 0%, #00525A 60%, #008A8E 100%);
+    color: #fff; padding: 34px 40px 30px;
+  }
+  .tb-row { display: flex; align-items: center; gap: 16px; max-width: 1080px; margin: 0 auto; }
+  .logo { width: 46px; height: 46px; border-radius: 12px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 17px; flex: 0 0 auto; box-shadow: 0 4px 14px rgba(0,0,0,0.25); }
+  .tb-title { font-size: 21px; font-weight: 700; letter-spacing: 0.5px; }
+  .tb-sub { font-size: 12.5px; opacity: 0.82; margin-top: 3px; }
+  .tb-badges { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .badge { font-size: 11px; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); white-space: nowrap; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 30px 40px 50px; }
+
+  h2.sec { font-size: 15px; font-weight: 700; margin: 30px 0 14px; display: flex; align-items: center; gap: 8px; }
+  h2.sec::before { content: ""; width: 4px; height: 14px; border-radius: 2px; background: var(--primary); }
+  h2.sec .sub { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 4px; }
+
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 980px) { .cards { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 20px 20px; position: relative; transition: box-shadow 0.2s, transform 0.2s; }
+  .card:hover { box-shadow: 0 8px 26px rgba(0,71,77,0.10); transform: translateY(-2px); }
+  .card-head { display: flex; align-items: center; gap: 10px; }
+  .card-ico { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex: 0 0 auto; }
+  .ico-a { background: var(--primary-light); }
+  .ico-b { background: rgba(250, 140, 22, 0.12); }
+  .ico-c { background: rgba(29, 78, 216, 0.10); }
+  .ico-d { background: rgba(124, 77, 255, 0.10); }
+  .ico-e { background: rgba(13, 148, 136, 0.12); }
+  .ico-f { background: rgba(99, 102, 241, 0.10); }
+  .card-title { font-size: 15.5px; font-weight: 700; }
+  .card-en { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  .card-desc { font-size: 12px; color: #4A5A6A; margin: 12px 0 12px; padding: 10px 11px; background: var(--bg); border-radius: 8px; }
+  .card-desc b { color: var(--ink); }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px; }
+  .tag { font-size: 10.5px; padding: 3px 8px; border-radius: 6px; background: var(--primary-light); color: var(--primary-dark); }
+  .open-btn { display: block; text-align: center; padding: 11px 0; border-radius: 9px; background: var(--primary); color: #fff; font-size: 13.5px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+  .open-btn:hover { background: var(--primary-dark); }
+  .open-btn .arrow { display: inline-block; margin-left: 4px; transition: transform 0.2s; }
+  .open-btn:hover .arrow { transform: translateX(3px); }
+  .card-meta { font-size: 11px; color: var(--muted); text-align: center; margin-top: 9px; }
+
+  .modes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 860px) { .modes { grid-template-columns: 1fr; } }
+  .mode { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 16px 18px; }
+  .mode-t { font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+  .mode-t .no { width: 20px; height: 20px; border-radius: 6px; background: var(--primary-light); color: var(--primary-dark); font-size: 11px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .mode-d { font-size: 12px; color: #4A5A6A; }
+  .mode-d b { color: var(--ink); }
+  .mode-who { display: inline-block; margin-top: 8px; font-size: 10.5px; color: var(--primary-dark); background: var(--primary-light); border-radius: 5px; padding: 2px 8px; }
+
+  .it-note { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; padding: 22px 26px; }
+  .it-note table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .it-note th { text-align: left; padding: 9px 12px; background: var(--bg); color: var(--muted); font-weight: 600; font-size: 11.5px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  .it-note td { padding: 10px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .it-note tr:last-child td { border-bottom: none; }
+  .it-note td b { color: var(--ink); }
+  code { background: var(--bg); border: 1px solid var(--rule); border-radius: 5px; padding: 1px 7px; font-size: 11.5px; font-family: Consolas, Monaco, monospace; color: #C0392B; white-space: nowrap; }
+
+  .steps { counter-reset: s; list-style: none; }
+  .steps li { counter-increment: s; padding-left: 30px; position: relative; margin-bottom: 9px; font-size: 12.5px; color: #4A5A6A; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--primary-light); color: var(--primary-dark); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .steps li b { color: var(--ink); }
+
+  .foot { text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--rule); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="tb-row">
+    <div class="logo">AI</div>
+    <div>
+      <div class="tb-title">AI 人才库 · 交互原型交付包</div>
+      <div class="tb-sub">人才库激活复用 + 即时提醒 + 关键人才跟盯 + 寻聘记录报表 + 简历定时查重 + 人才匹配工作流 · V1.4 · 2026-09-11</div>
+    </div>
+    <div class="tb-badges">
+      <span class="badge">纯静态单文件</span>
+      <span class="badge">无外部依赖</span>
+      <span class="badge">含完整 PRD</span>
+      <span class="badge">含演示模式</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h2 class="sec">功能原型 <span class="sub">点击卡片按钮打开，交互均可真实操作</span></h2>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-a">♻️</div>
+        <div>
+          <div class="card-title">人才库激活复用</div>
+          <div class="card-en">Talent Pool Activation &amp; Reuse</div>
+        </div>
+      </div>
+      <div class="card-desc">
+        BP <b>主动发起</b>的一次性召回：按「职位 + 粗筛条件」圈选库内简历 → <b>AI 匹配评估</b>排序生成推荐名单 → <b>AI 外呼 + 短信</b>（可选仅短信）批量触达 → <b>导出 Excel</b> 名单跟进。
+      </div>
+      <div class="tags">
+        <span class="tag">召回规则配置</span>
+        <span class="tag">AI 匹配评估</span>
+        <span class="tag">触达方式可选</span>
+        <span class="tag">话术 + 题库</span>
+        <span class="tag">Excel 导出</span>
+        <span class="tag">简历版本管理</span>
+      </div>
+      <a class="open-btn" href="talent-pool-activation/talent-pool-activation.html">打开原型<span class="arrow">→</span></a>
+      <div class="card-meta">单文件 364KB · 建议先点右上角「▶ 演示模式」看完整流程</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-b">🔔</div>
+        <div>
+          <div class="card-title">人才库即时提醒</div>
+          <div class="card-en">Talent Pool Real-time Notification</div>
+        </div>
+      </div>
+      <div class="card-desc">
+        候选人<b>外部互动信号</b>驱动的被动提醒：平台投递 / 简历更新信号 → <b>查重撞库</b>（确认命中 / 疑似命中比对）→ 信号流工作台处理 → 触达跟进或忽略，附<b>钉钉日报</b>。
+      </div>
+      <div class="tags">
+        <span class="tag">信号流工作台</span>
+        <span class="tag">查重撞库比对</span>
+        <span class="tag">简历自动同步</span>
+        <span class="tag">AI 外呼 + 短信</span>
+        <span class="tag">数据导出 + 审计</span>
+        <span class="tag">钉钉日报</span>
+      </div>
+      <a class="open-btn" href="talent-pool-notification/talent-pool-notification.html">打开原型<span class="arrow">→</span></a>
+      <div class="card-meta">单文件 322KB · 建议先点右上角「▶ 演示模式」看完整流程</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-c">🎯</div>
+        <div>
+          <div class="card-title">关键人才库跟盯</div>
+          <div class="card-en">Key Talent Pool Tracking</div>
+        </div>
+      </div>
+      <div class="card-desc">
+        BP 配置「<b>目标企业 × 岗位画像</b>」跟盯规则（不限数量）→ 符合条件人才<b>自动入库</b>持续监测 → <b>动向预警</b>出现才触达跟进，支持手动加人 / 移除 / 拉黑。
+      </div>
+      <div class="tags">
+        <span class="tag">单页规则配置</span>
+        <span class="tag">目标企业 + 别名匹配</span>
+        <span class="tag">自动入库</span>
+        <span class="tag">动向预警</span>
+        <span class="tag">异步重算</span>
+        <span class="tag">AI 外呼 + 短信</span>
+      </div>
+      <a class="open-btn" href="talent-pool-tracking/talent-pool-tracking.html">打开原型<span class="arrow">→</span></a>
+      <div class="card-meta">单文件 258KB · 建议先点右上角「▶ 演示模式」看完整流程</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-d">📋</div>
+        <div>
+          <div class="card-title">寻聘记录报表</div>
+          <div class="card-en">AI Sourcing Report</div>
+        </div>
+      </div>
+      <div class="card-desc">
+        所有 AI 寻聘（激活复用 / 即时提醒 / 关键人才跟盯）的<b>人岗匹配评估记录自动沉淀</b>：候选人 / 职位 / 匹配分 / 是否通过 / 匹配摘要 / 未通过硬性条件 / 简历附件 11 个字段一表可查，支持<b>多条件筛选、排序、详情核查、简历预览、导出 Excel</b>；候选人若<b>库内已存在</b>则姓名旁自动回显库内编号（如 C00045433），点击可跳转库内候选人详情。
+      </div>
+      <div class="tags">
+        <span class="tag">评估记录自动沉淀</span>
+        <span class="tag">11 字段一表可查</span>
+        <span class="tag">多条件筛选排序</span>
+        <span class="tag">硬性条件核查</span>
+        <span class="tag">查重标记·库内编号回显</span>
+        <span class="tag">Excel 导出</span>
+      </div>
+      <a class="open-btn" href="talent-pool-sourcing-report/talent-pool-sourcing-report.html">打开原型<span class="arrow">→</span></a>
+      <div class="card-meta">单文件 128KB · 建议先点右上角「▶ 演示模式」看完整流程</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-e">🔍</div>
+        <div>
+          <div class="card-title">简历定时查重</div>
+          <div class="card-en">Resume Timed Duplicate Check</div>
+        </div>
+      </div>
+      <div class="card-desc">
+        每日 <b>02:00 自动比对</b>新入库候选人简历与人才库已有简历：姓名+手机号<b>完全一致</b>标红色「重」标记，相似度<b>≥75%</b>标橙色「疑」标记，直接回显<b>库内编号</b>（如 C0002345），点击跳转详情，支持<b>8 字段并排比对</b>弹窗（合并 / 取消标记）。
+      </div>
+      <div class="tags">
+        <span class="tag">每日02:00自动比对</span>
+        <span class="tag">精确匹配·红「重」</span>
+        <span class="tag">疑似匹配·橙「疑」</span>
+        <span class="tag">库内编号回显</span>
+        <span class="tag">8字段并排比对</span>
+        <span class="tag">合并 / 取消标记</span>
+      </div>
+      <a class="open-btn" href="talent-pool-resume-dedup/talent-pool-resume-dedup.html">打开原型<span class="arrow">→</span></a>
+      <div class="card-meta">单文件 286KB · 建议先点右上角「▶ 演示模式」看完整流程</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-ico ico-f">⚙️</div>
+        <div>
+          <div class="card-title">AI 人才匹配工作流</div>
+          <div class="card-en">Talent Matching Workflow</div>
+        </div>
+      </div>
+      <div class="card-desc">
+        可视化<b>节点编排画布</b>：16 个节点、19 条数据流向，覆盖简历解析 → 合规审核 → 岗位分类 → <b>4 知识库并行检索</b> → <b>4 维度 AI 匹配评估</b>（技能/文化/薪资/经验）→ 幻觉兜底 → 输出全链路。支持<b>拖拽节点、缩放平移、单节点运行、全流程运行、节点详情弹窗</b>。
+      </div>
+      <div class="tags">
+        <span class="tag">可视化节点画布</span>
+        <span class="tag">16节点19连线</span>
+        <span class="tag">拖拽·缩放·平移</span>
+        <span class="tag">单节点/全流程运行</span>
+        <span class="tag">4知识库并行检索</span>
+        <span class="tag">幻觉兜底校验</span>
+      </div>
+      <a class="open-btn" href="talent-pool-workflow/talent-pool-workflow.html">打开原型<span class="arrow">→</span></a>
+      <div class="card-meta">单文件 56KB · 建议先点右上角「▶ 演示模式」看完整流程</div>
+    </div>
+
+  </div>
+
+  <h2 class="sec">三种查看方式 <span class="sub">每个原型右上角均可切换</span></h2>
+  <div class="modes">
+    <div class="mode">
+      <div class="mode-t"><span class="no">1</span>原型预览</div>
+      <div class="mode-d"><b>交互式操作</b>：所有按钮、筛选、下拉、弹窗均可真实点击，模拟完整使用流程。</div>
+      <span class="mode-who">适合：逐项体验功能细节</span>
+    </div>
+    <div class="mode">
+      <div class="mode-t"><span class="no">2</span>文档模式</div>
+      <div class="mode-d"><b>完整 PRD 文档</b>：功能概览、产品设计、需求详情、规则口径，内嵌原型快照，可从文档一键跳转对应界面。</div>
+      <span class="mode-who">适合：IT / 产品评审需求（推荐）</span>
+    </div>
+    <div class="mode">
+      <div class="mode-t"><span class="no">3</span>演示模式</div>
+      <div class="mode-d"><b>自动播放</b>完整用户旅程（约 2-3 分钟），含光标模拟、步骤字幕与进度控制，支持暂停 / 单步。</div>
+      <span class="mode-who">适合：快速汇报与整体理解</span>
+    </div>
+  </div>
+
+  <h2 class="sec">给 IT 的技术说明</h2>
+  <div class="it-note">
+    <table>
+      <tr><th style="width:120px;">项目</th><th>说明</th></tr>
+      <tr><td><b>技术形态</b></td><td>纯前端静态<b>单 HTML 文件</b>（内联 CSS / JS），无外部依赖、无后端调用、无数据上报，双击即可在任意现代浏览器打开。</td></tr>
+      <tr><td><b>数据说明</b></td><td>页面内所有候选人 / 公司 / 数据均为<b>示意 mock 数据</b>，仅用于交互演示，不含真实个人信息。</td></tr>
+      <tr><td><b>部署方式</b></td><td>如需挂内网链接，将整个文件夹放入静态服务器即可，例如 Nginx：<br><code>location /talent-pool/ { alias /srv/talent-pool/; index index.html; }</code><br>访问 <code>http://内网域名/talent-pool/</code> 即为本入口页。</td></tr>
+      <tr><td><b>需求评审</b></td><td>请优先打开各原型的<b>「文档模式」</b>查看完整 PRD（功能概览 / 产品设计 / 需求详情 / 规则四部分），评审后再进入排期。</td></tr>
+      <tr><td><b>交付边界</b></td><td>本包为<b>需求与交互设计交付物</b>（原型 + PRD），不含生产代码；六个功能均需与既有 ATS 嵌套集成，集成边界见各原型文档模式「产品设计」章节。</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec">建议查看顺序</h2>
+  <div class="it-note">
+    <ol class="steps">
+      <li>双击本文件夹中的 <b>index.html</b>（即本页），从入口进入六个功能。</li>
+      <li>对每个功能，先点右上角<b>「▶ 演示模式」</b>，2-3 分钟看懂完整用户旅程。</li>
+      <li>切换到<b>「文档模式」</b>通读 PRD，重点看「需求详情」与「规则」两章（字段口径、状态流转、边界条件）。</li>
+      <li>有疑问回到<b>「原型预览」</b>逐个交互验证；原型中所有按钮 / 弹窗均可操作。</li>
+      <li>需求问题反馈给 <b>张明（招聘 BP）</b>，统一澄清后进入排期。</li>
+    </ol>
+  </div>
+
+  <div class="foot">交付人：张明 · 招聘运营（T3） · 2026-09-11 · 本包共 6 个功能原型 + 1 个入口页</div>
+
+</div>
+
+</body>
+</html>
